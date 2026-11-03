@@ -295,6 +295,44 @@ The STM32C552KEU6 microcontroller manages the communication with the LiDAR and I
 The repository contains STM32 configuration files (`.ioc2`) defining peripheral settings, including USB, I3C, and SPI interfaces.
 
 
+### 2.2 Data Acquisition & Usage
+
+The board is designed to acquire distance measurements from the VL53L9CX LiDAR sensor and motion data from the LSM6DSV IMU.
+
+The STM32 microcontroller is intended to collect the sensor data and transmit it to a host computer via USB 2.0 Full-Speed.
+
+**LiDAR Measurement Profiles**
+
+According to the project README, two measurement profiles are planned:
+
+| Profile | Resolution | Frame Rate |
+|---|---|---|
+| Full Resolution (Default) | 54 × 42 zones | 30 Hz |
+| Binned Navigation | 24 × 20 zones | 60 Hz |
+
+The Full Resolution profile provides more spatial detail, while the Binned Navigation profile offers faster updates with fewer measurement zones.
+
+**Data Transmission**
+
+Sensor data is intended to follow this path:
+
+LiDAR (I3C) / IMU (SPI) → STM32 → USB → Host PC
+
+The project specifies USB Full-Speed (12 Mbit/s) communication with raw binary data packets instead of text-based formats such as JSON or CSV.
+
+Binary transmission reduces data overhead, which is particularly useful for transferring large amounts of sensor data.
+
+**Current Status**
+
+The repository does not contain a complete data acquisition firmware or a documented USB packet format. Therefore, the proposed measurement profiles, data transmission, and sensor operation still require practical validation.
+
+**References**
+- [Project README](../README.md)
+- [Firmware Directory](../firmware/)
+- [Microcontroller Schematic](../pcb/MCU.kicad_sch)
+
+
+
 **References**
 - [Project README](../README.md)
 - [Firmware Directory](../firmware/)
