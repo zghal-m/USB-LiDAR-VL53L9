@@ -245,3 +245,40 @@ The VL53L9CX also provides MIPI data and clock pins (DATA_P/N and CLK_P/N), but 
 - [LiDAR Schematic](../pcb/lidar.kicad_sch)
 - [VL53L9CX Datasheet](DS_vl53l9cx.pdf)
 - [Project README](../README.md)
+
+#### 1.3.4 IMU Circuit
+
+The board integrates an LSM6DSV 6-axis Inertial Measurement Unit (IMU), combining a 3-axis accelerometer and a 3-axis gyroscope to measure acceleration and angular velocity.
+
+**IMU Sensor & SPI Interface**
+
+![IMU Circuit](imu_circuit.png)
+
+*Figure 7: LSM6DSV IMU sensor, SPI interface, and power supply.*
+
+The LSM6DSV (U3) operates at 3.3 V and communicates with the STM32 microcontroller through an SPI interface.
+
+The main connections are:
+
+| Signal | Sensor Pin | Function |
+|---|---|---|
+| SPI_SCK | SCL | SPI clock signal |
+| SPI_MOSI | SDA | Data from STM32 to IMU |
+| SPI_MISO | SDO | Data from IMU to STM32 |
+| SPI_CS | CS | Chip select |
+| IMU_INT1 | INT1 | Interrupt output 1 |
+| IMU_INT2 | INT2 | Interrupt output 2 |
+
+**Additional Components**
+
+- **C25 (1 µF):** Supply decoupling capacitor.
+- **C26, C27 (100 nF):** Reduce noise and stabilize the 3.3 V supply.
+- **VDD / VDD_IO:** Both connected to 3.3 V.
+- **SCx / SDx:** Connected to ground in the current design.
+- **SDO_AUX / CS_AUX:** Not connected; the auxiliary interface is not used.
+
+The IMU provides motion measurements that can complement the LiDAR distance data in applications involving movement and navigation.
+
+**References**
+- [IMU Schematic](../pcb/IMU.kicad_sch)
+- [LSM6DSV – STMicroelectronics](https://www.st.com/en/mems-and-sensors/lsm6dsv.html)
