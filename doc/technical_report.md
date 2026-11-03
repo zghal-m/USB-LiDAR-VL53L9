@@ -125,3 +125,64 @@ This architecture provides the different voltage levels needed by the board's co
 - [TLV733 Datasheet – Texas Instruments](https://www.ti.com/lit/ds/symlink/tlv733p.pdf)
 
 
+#### 1.3.2 Microcontroller & USB
+
+The board uses an STM32C552KEU6 microcontroller as its central control unit. It interfaces with the LiDAR and IMU sensors and is intended to transfer measurement data to a host computer via USB-C.
+
+**A. USB-C Interface**
+
+![USB-C Interface](usb_interface.png)
+
+*Figure 3: USB-C connector, power input, and protection circuit.*
+
+The USB-C interface provides the 5 V power supply and supports USB 2.0 Full-Speed communication (12 Mbit/s).
+
+The main components are:
+
+| Component | Function |
+|---|---|
+| J1 (USB4106) | USB-C connector for power and data |
+| R9, R10 (5.1 kΩ) | CC resistors for USB-C device detection |
+| U10 (USBLC6-2SC6) | ESD protection for USB data lines |
+| D2 (DF2B7AE) | Protection of the USB power input |
+| FB1 | Ferrite bead to suppress high-frequency noise |
+| C23, C24 | Filtering and stabilization of the 5 V supply |
+| R23, C36 | Coupling between USB shield and circuit ground |
+
+The USB data lines (D+ and D−) connect to the STM32 through the USB signal nets, with ESD protection provided by U10.
+
+The 5 V supply passes through FB1 before reaching the power regulation circuit described in Section 1.3.1.
+
+**B. STM32 Microcontroller**
+
+![STM32 Microcontroller](stm32_microcontroller.png)
+
+*Figure 4: STM32 microcontroller and its main connections.*
+
+The STM32C552KEU6 (U2) operates from the 3.3 V supply and acts as the main interface between the sensors and the host computer.
+
+Its main connections are:
+
+| Interface | Signals | Function |
+|---|---|---|
+| USB | USB_D+, USB_D− | Communication with the host computer |
+| LiDAR | SDA, SCL, CLK | Sensor communication |
+| LiDAR Control | SYNC, SHDN, INTR | Synchronization, shutdown, and interrupt signals |
+| IMU | SPI_SCK, SPI_MISO, SPI_MOSI, SPI_CS | SPI communication with the IMU |
+| IMU Interrupts | IMU_INT1, IMU_INT2 | Sensor event notifications |
+| Debug | SWDIO, SWDCLK | Programming and debugging |
+
+Additional components support the operation of the microcontroller:
+
+- **Decoupling capacitors (C12, C15, C16, C22):** Stabilize the 3.3 V supply and reduce noise.
+- **R8 (10 kΩ):** Pull-down resistor for the BOOT0 pin.
+- **D3 + R12:** Red status LED with a current-limiting resistor.
+
+The microcontroller is intended to collect data from both sensors and provide it to the host through the USB interface.
+
+**References**
+- [Microcontroller Schematic](../pcb/MCU.kicad_sch)
+- [Project README](../README.md)
+- [STM32C552KE – STMicroelectronics](https://www.st.com/en/microcontrollers-microprocessors/stm32c552ke.html)
+- [USBLC6-2SC6 – STMicroelectronics](https://www.st.com/en/protections-and-emi-filters/usblc6-2.html)
+
