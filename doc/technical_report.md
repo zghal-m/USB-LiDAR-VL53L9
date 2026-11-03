@@ -282,3 +282,21 @@ The IMU provides motion measurements that can complement the LiDAR distance data
 **References**
 - [IMU Schematic](../pcb/IMU.kicad_sch)
 - [LSM6DSV – STMicroelectronics](https://www.st.com/en/mems-and-sensors/lsm6dsv.html)
+
+
+## 2. Board Usage & Operation
+
+### 2.1 Board Setup & Configuration
+
+The USB-C LiDAR Node is designed to operate as a USB-connected sensing device, powered by a 5 V supply from a host computer.
+
+The STM32C552KEU6 microcontroller manages the communication with the LiDAR and IMU sensors and is intended to transfer the acquired data to the host via USB 2.0 Full-Speed.
+
+The repository contains STM32 configuration files (`.ioc2`) defining peripheral settings, including USB, I3C, and SPI interfaces.
+
+
+**References**
+- [Project README](../README.md)
+- [Firmware Directory](../firmware/)
+- [Microcontroller Schematic](../pcb/MCU.kicad_sch)
+
