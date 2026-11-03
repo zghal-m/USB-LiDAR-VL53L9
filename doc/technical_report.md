@@ -186,3 +186,62 @@ The microcontroller is intended to collect data from both sensors and provide it
 - [STM32C552KE – STMicroelectronics](https://www.st.com/en/microcontrollers-microprocessors/stm32c552ke.html)
 - [USBLC6-2SC6 – STMicroelectronics](https://www.st.com/en/protections-and-emi-filters/usblc6-2.html)
 
+
+#### 1.3.3 LiDAR Circuit
+
+The board integrates a VL53L9CX LiDAR sensor (U1) for 3D distance measurements. The circuit includes the sensor's power supply connections, communication interface, and level shifters for communication with the STM32 microcontroller.
+
+**A. LiDAR Sensor & I3C Interface**
+
+![VL53L9CX Sensor Circuit](lidar_sensor.png)
+
+*Figure 5: VL53L9CX sensor, power supply connections, and I3C level shifter.*
+
+The VL53L9CX requires several supply voltages:
+
+| Supply | Voltage | Function |
+|---|---|---|
+| VBAT_LDD, VBAT_RX | 3.3 V | Sensor supply |
+| AVDD | 2.8 V | Analog supply |
+| DVDD | 1.2 V | Digital supply |
+| IOVDD | 1.8 V | Digital I/O supply |
+
+Decoupling capacitors (C9–C14) stabilize the different voltage rails.
+
+The sensor communicates with the STM32 using the SDA and SCL lines. The LSF0102 (U8) is a bidirectional level shifter that converts the signal levels between 3.3 V (STM32) and 1.8 V (LiDAR).
+
+Additional control signals include:
+
+- **SYNC_IN:** External synchronization input.
+- **AP_CLK:** External clock input.
+- **XSHUT:** Sensor shutdown control.
+- **INTR:** Interrupt output to the microcontroller.
+
+**B. Control Signal Level Shifters**
+
+![LiDAR Level Shifters](lidar_level_shifters.png)
+
+*Figure 6: Clock, interrupt, and shutdown level shifter circuits.*
+
+Three additional level shifters adapt the control signals between the STM32 and the LiDAR sensor.
+
+| Component | Signal | Direction | Function |
+|---|---|---|---|
+| U12 – SN74AXC1T45 | LIDAR_CLK | 3.3 V → 1.8 V | Clock signal |
+| U14 – 74LVC1T45 | LIDAR_INTR | 1.8 V → 3.3 V | Interrupt signal |
+| U13 – 74LVC1T45 | LIDAR_SHDN | 3.3 V → 1.8 V | Shutdown control |
+
+Additional components include:
+
+- **R15 (22 Ω):** Series resistor on the clock line.
+- **R16, R17 (10 kΩ):** Pull-down and pull-up resistors.
+- **C30–C35 (100 nF):** Decoupling capacitors for the level shifters.
+
+**Implementation Note**
+
+The VL53L9CX also provides MIPI data and clock pins (DATA_P/N and CLK_P/N), but these are not connected in the current schematic. The board is designed to use the SDA/SCL interface for sensor communication.
+
+**References**
+- [LiDAR Schematic](../pcb/lidar.kicad_sch)
+- [VL53L9CX Datasheet](DS_vl53l9cx.pdf)
+- [Project README](../README.md)
